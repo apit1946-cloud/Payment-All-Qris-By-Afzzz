@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pembayaran QRIS - OrderKuota</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(to right, #4b6cb7, #182848);
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+        
+        header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 30px;
+        }
+        
+        .qr-section {
+            flex: 1;
+            min-width: 300px;
+            padding: 20px;
+            border-right: 1px solid #eee;
+        }
+        
+        .qr-options {
+            flex: 1;
+            min-width: 300px;
+            padding: 20px;
+        }
+        
+        .qr-container {
+            background-color: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 25px;
+            border: 2px solid #4b6cb7;
+        }
+        
+        .qr-title {
+            color: #182848;
+            margin-bottom: 15px;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .qr-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin: 15px 0;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        
+        .qr-image:hover {
+            transform: scale(1.02);
+        }
+        
+        .qr-note {
+            background-color: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 15px;
+        }
+        
+        .qr-note i {
+            color: #ff9800;
+            margin-right: 8px;
+        }
+        
+        .payment-options {
+            margin-top: 20px;
+        }
+        
+        .option-card {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+        
+        .option-card:hover {
+            background-color: #eef2ff;
+            transform: translateY(-3px);
+        }
+        
+        .option-card.active {
+            border-color: #4b6cb7;
+            background-color: #e8edff;
+        }
+        
+        .option-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 24px;
+            color: white;
+        }
+        
+        .orderkuota-icon {
+            background: linear-gradient(to right, #4b6cb7, #182848);
+        }
+        
+        .dana-icon {
+            background: linear-gradient(to right, #00a9f1, #0081c9);
+        }
+        
+        .gopay-icon {
+            background: linear-gradient(to right, #00aa13, #008c10);
+        }
+        
+        .option-text h3 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        
+        .option-text p {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .highlight {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+        
+        .instructions {
+            background-color: #f0f7ff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+        
+        .instructions h3 {
+            color: #182848;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .instructions ol {
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #f8f9fa;
+            color: #666;
+            font-size: 14px;
+            border-top: 1px solid #eee;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .qr-section {
+                border-right: none;
+                border-bottom: 1px solid #eee;
+            }
+            
+            header h1 {
+                font-size: 24px;
+            }
+        }
+        
+        .badge {
+            display: inline-block;
+            background-color: #4b6cb7;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-qrcode"></i> Pembayaran QRIS</h1>
+            <p>Scan QR Code berikut untuk melakukan pembayaran</p>
+        </header>
+        
+        <div class="main-content">
+            <div class="qr-section">
+                <div class="qr-container">
+                    <div class="qr-title">
+                        <i class="fas fa-star"></i> QR ORDERKUOTA (Direkomendasikan)
+                        <span class="badge">UTAMA</span>
+                    </div>
+                    <p>Gunakan QRIS ini untuk pembayaran melalui berbagai aplikasi e-wallet & mobile banking</p>
+                    <img src="https://files.catbox.moe/quoveb.jpg" alt="QRIS OrderKuota" class="qr-image" id="main-qr">
+                    
+                    <div class="qr-note">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <strong>CATATAN:</strong> Untuk transfer, usahakan menggunakan QR ORDERKUOTA!
+                    </div>
+                </div>
+                
+                <div class="instructions">
+                    <h3><i class="fas fa-info-circle"></i> Cara Pembayaran:</h3>
+                    <ol>
+                        <li>Buka aplikasi e-wallet atau mobile banking Anda</li>
+                        <li>Pilih menu <strong>Bayar</strong> atau <strong>Scan QR</strong></li>
+                        <li>Arahkan kamera ke QR Code di atas</li>
+                        <li>Masukkan nominal pembayaran sesuai pesanan Anda</li>
+                        <li>Konfirmasi dan selesaikan pembayaran</li>
+                    </ol>
+                </div>
+            </div>
+            
+            <div class="qr-options">
+                <h2><i class="fas fa-wallet"></i> Pilihan QR Lainnya</h2>
+                <p class="subtitle">Pilih metode pembayaran alternatif jika diperlukan</p>
+                
+                <div class="payment-options">
+                    <div class="option-card active" onclick="changeQR('orderkuota')">
+                        <div class="option-icon orderkuota-icon">
+                            <i class="fas fa-qrcode"></i>
+                        </div>
+                        <div class="option-text">
+                            <h3>QR ORDERKUOTA <span class="highlight">REKOMENDASI</span></h3>
+                            <p>QRIS untuk semua aplikasi pembayaran</p>
+                        </div>
+                    </div>
+                    
+                    <div class="option-card" onclick="changeQR('dana')">
+                        <div class="option-icon dana-icon">
+                            <i class="fab fa-d-and-d"></i>
+                        </div>
+                        <div class="option-text">
+                            <h3>QR DANA (DANA ONLY)</h3>
+                            <p>Hanya untuk pembayaran via aplikasi DANA</p>
+                        </div>
+                    </div>
+                    
+                    <div class="option-card" onclick="changeQR('gopay')">
+                        <div class="option-icon gopay-icon">
+                            <i class="fas fa-money-bill-wave"></i>
+                        </div>
+                        <div class="option-text">
+                            <h3>QR GOPAY MERCHANT</h3>
+                            <p>Pembayaran via GoPay Merchant (Opsional)</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="instructions">
+                    <h3><i class="fas fa-lightbulb"></i> Tips Pembayaran:</h3>
+                    <ul style="padding-left: 20px;">
+                        <li>Pastikan saldo/cukup sebelum melakukan pembayaran</li>
+                        <li>Screenshot QR Code jika kesulitan melakukan scan langsung</li>
+                        <li>Simpan bukti pembayaran untuk konfirmasi</li>
+                        <li>Untuk masalah teknis, hubungi customer service</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2023 Pembayaran QRIS. Pastikan Anda membayar ke merchant yang benar.</p>
+            <p>Halaman ini aman dan tidak menyimpan data pembayaran Anda.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Fungsi untuk mengganti QR Code yang ditampilkan
+        function changeQR(type) {
+            const qrImage = document.getElementById('main-qr');
+            const optionCards = document.querySelectorAll('.option-card');
+            
+            // Hapus class active dari semua opsi
+            optionCards.forEach(card => {
+                card.classList.remove('active');
+            });
+            
+            // Tambah class active ke opsi yang diklik
+            event.currentTarget.classList.add('active');
+            
+            // Ganti QR Code berdasarkan tipe
+            if (type === 'orderkuota') {
+                qrImage.src = 'https://files.catbox.moe/quoveb.jpg';
+                document.querySelector('.qr-title').innerHTML = '<i class="fas fa-star"></i> QR ORDERKUOTA (Direkomendasikan) <span class="badge">UTAMA</span>';
+                document.querySelector('.qr-container p').textContent = 'Gunakan QRIS ini untuk pembayaran melalui berbagai aplikasi e-wallet & mobile banking';
+            } else if (type === 'dana') {
+                qrImage.src = 'https://files.catbox.moe/ucyk28.jpg';
+                document.querySelector('.qr-title').innerHTML = '<i class="fab fa-d-and-d"></i> QR DANA (DANA ONLY)';
+                document.querySelector('.qr-container p').textContent = 'Hanya untuk pembayaran via aplikasi DANA';
+            } else if (type === 'gopay') {
+                qrImage.src = 'https://files.catbox.moe/t2gkzz.jpg';
+                document.querySelector('.qr-title').innerHTML = '<i class="fas fa-money-bill-wave"></i> QR GOPAY MERCHANT';
+                document.querySelector('.qr-container p').textContent = 'Pembayaran via GoPay Merchant (Opsional)';
+            }
+        }
+        
+        // Animasi sederhana saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', function() {
+            const container = document.querySelector('.container');
+            container.style.opacity = '0';
+            container.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                container.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                container.style.opacity = '1';
+                container.style.transform = 'translateY(0)';
+            }, 100);
+        });
+    </script>
+</body>
+</html>
